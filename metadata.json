@@ -1,0 +1,6 @@
+{
+  "name": "Kas Mushalla",
+  "description": "Sistem manajemen keuangan profesional mushalla: pencatatan kas masuk dan keluar real-time, sumbangan wakaf, inventaris, dan ekspor laporan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

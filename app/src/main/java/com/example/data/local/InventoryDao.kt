@@ -1,0 +1,40 @@
+package com.example.data.local
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import com.example.data.model.InventoryItem
+import com.example.data.model.ItemCondition
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface InventoryDao {
+    @Query("SELECT * FROM inventory_items ORDER BY updatedAt DESC, id DESC")
+    fun getAllItems(): Flow<List<InventoryItem>>
+
+    @Query("SELECT * FROM inventory_items WHERE condition = :condition ORDER BY updatedAt DESC")
+    fun getItemsByCondition(condition: ItemCondition): Flow<List<InventoryItem>>
+
+    @Query("SELECT COUNT(*) FROM inventory_items")
+    fun getTotalItemTypes(): Flow<Int>
+
+    @Query("SELECT COALESCE(SUM(quantity), 0) FROM inventory_items")
+    fun getTotalItemUnits(): Flow<Int>
+
+    @Query("SELECT COALESCE(SUM(quantity), 0) FROM inventory_items WHERE condition = 'BAIK'")
+    fun getGoodConditionUnits(): Flow<Int>
+
+    @Query("SELECT COALESCE(SUM(quantity), 0) FROM inventory_items WHERE condition != 'BAIK'")
+    fun getDamagedUnits(): Flow<Int>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertItem(item: InventoryItem): Long
+
+    @Update
+    suspend fun updateItem(item: InventoryItem)
+
+    @Query("DELETE FROM inventory_items WHERE id = :id")
+    suspend fun deleteItem(id: Long)
+}
